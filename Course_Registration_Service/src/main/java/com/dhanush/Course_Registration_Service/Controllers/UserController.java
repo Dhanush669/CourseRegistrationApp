@@ -26,24 +26,28 @@ public class UserController {
         return "login.jsp";
     }
 
-    @RequestMapping("/create")
+    @RequestMapping("/register")
     public String courseRegistration(UserEntity entity){
         return "register.jsp";
     }
 
-    @RequestMapping("/done")
-    public String successfullRegistration(UserEntity entity){
-        if(entity.getFname()!=null && entity.getLname()!=null && entity.getMailid()!=null && entity.getPassword()!=null && entity.getConfirmpassword()!=null){
-            if(!entity.getPassword().equals(entity.getConfirmpassword())){
-                return "/home.jsp";
-            }
-            BCryptPasswordEncoder bCrypt=new BCryptPasswordEncoder();
-            //System.out.println("before "+entity.getPassword());
-            entity.setPassword(bCrypt.encode(entity.getPassword()));
-            //System.out.println(entity.getPassword());
-            userRepo.save(entity);
+    @RequestMapping("/registrationdone")
+    public String successfullRegistration(UserEntity entity,HttpSession session){
+        if(entity.getFname()==null && entity.getLname()==null && entity.getMailid()==null && entity.getPassword()==null && entity.getConfirmpassword()==null){
+            session.setAttribute("name", "some fields are missing");
+            return "register.jsp";
         }
+        if(!entity.getPassword().equals(entity.getConfirmpassword())){
+            session.setAttribute("name", "passwords doesn't match");
+            return "register.jsp";
+        }
+        
+        BCryptPasswordEncoder bCrypt=new BCryptPasswordEncoder();
+        entity.setPassword(bCrypt.encode(entity.getPassword()));
+        
+        userRepo.save(entity);
         return "successfullRegistration.jsp";
+        
     }
 
     @RequestMapping("/home")

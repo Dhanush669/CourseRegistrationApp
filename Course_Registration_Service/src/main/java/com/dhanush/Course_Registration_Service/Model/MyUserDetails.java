@@ -20,8 +20,8 @@ public class MyUserDetails implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
-        //return null;
+        //return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        return null;
     }
 
     @Override

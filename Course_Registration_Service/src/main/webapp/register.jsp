@@ -18,10 +18,11 @@
 </head>
 
 <body data-new-gr-c-s-check-loaded="14.1052.0" data-gr-ext-installed="">
+    ${name.getAttribute()}
     <h1 style="text-align: center;">User registration</h1>
     <div class="center">
         <span style="align-content: center;">
-            <form action="/done">
+            <form action="/registrationdone">
                 <label for="fname" style="font-size: 16px;">First Name:</label><br>
                 <input style="height: 1.5rem;width: 60%;" type="text" id="fname" name="fname" value=""><br><br>
                 <label for="lname" style="font-size: 16px;">Last Name:</label><br>

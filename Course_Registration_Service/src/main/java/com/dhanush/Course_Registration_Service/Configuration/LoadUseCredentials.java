@@ -25,8 +25,8 @@ public class LoadUseCredentials extends WebSecurityConfigurerAdapter{
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/home");
         web.ignoring().antMatchers("/userlogin");
-        web.ignoring().antMatchers("/create");
-        web.ignoring().antMatchers("/done");
+        web.ignoring().antMatchers("/register");
+        web.ignoring().antMatchers("/registrationdone");
         web.ignoring().antMatchers("/h2-console/**");
     }
 

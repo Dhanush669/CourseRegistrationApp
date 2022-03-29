@@ -19,11 +19,11 @@
 </head>
 <html>
     <body>
-        <!-- WELCOME ${name.getFname()} ${name.getLname()} -->
+        ${name.getAttribute()}
         <div class="topnav">
             <b>course title</b>
             <button onclick="location.href='/userlogin'">LogIn</button>
-            <button onclick="location.href='/create'">Register</button>
+            <button onclick="location.href='/register'">Register</button>
             <button onclick="location.href='/showdetails'">Show Details</button>
         </div>
     </body>
