@@ -3,22 +3,35 @@ package com.dhanush.Course_Registration_Service.Controllers;
 import javax.servlet.http.HttpSession;
 
 import com.dhanush.Course_Registration_Service.Entity.UserEntity;
-import com.dhanush.Course_Registration_Service.Model.LoginData;
 import com.dhanush.Course_Registration_Service.Repository.UserRepo;
+import com.dhanush.Course_Registration_Service.Service.MyUserDetailsService;
+import com.dhanush.Course_Registration_Service.utils.JwtUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class UserController {
     
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    AuthenticationManager authManager;
+
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
 
     @RequestMapping("/userlogin")
     public String logInValidation(){
@@ -51,21 +64,27 @@ public class UserController {
     }
 
     @RequestMapping("/home")
-    public String goToHome(LoginData loginData){
-        //for testing 
-        if(loginData.getUserName()!=null && loginData.getUserName().equals(loginData.getPassword())){
-            return "invalidUser.jsp";
-        }
+    public String goToHome(){
+        System.out.println("asdfsadf");
         return "home.jsp";
     }
 
     @RequestMapping("/showdetails")
     @ResponseBody
-    public String showDetails(Authentication auth){
-        String info;
-        UserEntity user=userRepo.findUserBymailid(auth.getName());
-        info="First Name: "+user.getFname()+"\nLast Name: "+user.getLname()+"\nEmail id: "+user.getMailid()+"\nPhone No. "+user.getPhno();
-        return info;
+    public String showDetails(Authentication loginData) throws Exception{
+        String jwt;
+        UserDetails ud=myUserDetailsService.loadUserByUsername(loginData.getName());
+        System.out.println(ud.getUsername());
+        try{
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(ud.getUsername(),ud.getPassword()));
+        }
+        catch(BadCredentialsException e){
+            System.out.println(ud.getUsername()+"sadfsad");
+            throw new Exception("Bad Credentials",e);
+            
+        }
+        jwt=jwtUtils.generateJwt(ud);
+        return jwt;
     }
 
 }

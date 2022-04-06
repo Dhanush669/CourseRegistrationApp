@@ -19,7 +19,7 @@
 </head>
 <html>
     <body>
-        ${name.getAttribute()}
+        <!-- ${name.getAttribute()} -->
         <div class="topnav">
             <b>course title</b>
             <button onclick="location.href='/userlogin'">LogIn</button>
