@@ -42,7 +42,7 @@ public class JwtUtils {
         return extractClaims(jwt, Claims::getExpiration);
     }
 
-    private String extractUserName(String jwt){
+    public String extractUserName(String jwt){
         return extractClaims(jwt,Claims::getSubject);
     }
 
