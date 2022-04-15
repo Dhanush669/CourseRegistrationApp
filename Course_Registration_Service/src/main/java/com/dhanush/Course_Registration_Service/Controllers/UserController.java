@@ -9,7 +9,7 @@ import com.dhanush.Course_Registration_Service.Repository.UserRepo;
 import com.dhanush.Course_Registration_Service.Service.MyUserDetailsService;
 import com.dhanush.Course_Registration_Service.utils.JwtUtils;
 
-
+import org.hibernate.annotations.GenerationTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,12 +22,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class UserController {
+    
+    
+    LoginData loginData=new LoginData();
     
     @Autowired
     UserRepo userRepo;
@@ -40,19 +45,27 @@ public class UserController {
 
     @Autowired
     MyUserDetailsService myUserDetailsService;
+    
+    String jwt;
+    
+    @GetMapping("/authenticate")
+    public String authenticate(){
+        return "login.jsp";
+    }
 
-    @RequestMapping(value="/userlogin",method=RequestMethod.POST)
-    public ResponseEntity<?> logInValidation(@RequestBody LoginData loginData)throws Exception{
-        String jwt;
-        UserDetails ud=myUserDetailsService.loadUserByUsername(loginData.getUserName());
+    //@RequestMapping(value="/userlogin",method=RequestMethod.POST)
+    @PostMapping("/userlogin")
+    public ResponseEntity<?> logInValidation(@RequestParam(name="userName") String userName, @RequestParam(name="password") String password)throws Exception{
+        loginData.setUserName(userName);
+        loginData.setPassword(password);
         
+        
+        UserDetails ud=myUserDetailsService.loadUserByUsername(userName);
         try{
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(ud.getUsername(),loginData.getPassword()));
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(ud.getUsername(),password));
         }
         catch(BadCredentialsException e){
-            System.out.println(ud.getUsername()+" adsfsda");
-            throw new Exception("Bad Credentials",e);
-            
+            throw new Exception("Bad Credentials",e);   
         }
         jwt=jwtUtils.generateJwt(ud);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
@@ -63,14 +76,19 @@ public class UserController {
         return "register.jsp";
     }
 
-    @RequestMapping("/registrationdone")
-    public String successfullRegistration(UserEntity entity,HttpSession session){
+    @PostMapping("/registrationdone")
+    public String successfullRegistration(UserEntity entity){
+
         if(entity.getFname()==null && entity.getLname()==null && entity.getMailid()==null && entity.getPassword()==null && entity.getConfirmpassword()==null){
-            session.setAttribute("name", "some fields are missing");
             return "register.jsp";
         }
         if(!entity.getPassword().equals(entity.getConfirmpassword())){
-            session.setAttribute("name", "passwords doesn't match");
+            
+            return "register.jsp";
+        }
+        
+        if(userRepo.findUserBymailid(entity.getMailid())!=null){
+           
             return "register.jsp";
         }
         
@@ -78,23 +96,23 @@ public class UserController {
         entity.setPassword(bCrypt.encode(entity.getPassword()));
         
         userRepo.save(entity);
+        System.out.println("hey inside reg done"+": ");
         return "successfullRegistration.jsp";
         
     }
 
-    @RequestMapping("/home")
+    @RequestMapping(value="/home",method=RequestMethod.GET)
     public String goToHome(){
-        System.out.println("asdfsadf adfldasjfjsldajfkljsa;kldfj;klsajd");
         return "home.jsp";
     }
 
-    @RequestMapping("/showdetails")
-    @ResponseBody
-    public String showDetails(Authentication loginData) {
-        String info;
-        UserEntity uEntity=userRepo.findUserBymailid(loginData.getName());
-        info="First Name: "+uEntity.getFname()+" Last Name: "+uEntity.getLname()+" Enail id: "+uEntity.getMailid()+" phno: "+uEntity.getPhno();
-        return info;
-    }
+//    @RequestMapping("/showdetails")
+//    @ResponseBody
+//    public String showDetails() {
+//        String info;
+////        UserEntity uEntity=userRepo.findUserBymailid(loginData.getName());
+//        info="First Name: "+uEntity.getFname()+" Last Name: "+uEntity.getLname()+" Email id: "+uEntity.getMailid()+" phno: "+uEntity.getPhno();
+//        return info;
+//    }
 
 }

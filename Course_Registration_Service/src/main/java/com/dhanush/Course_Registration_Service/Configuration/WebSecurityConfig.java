@@ -29,11 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-			.csrf().disable()
-			.authorizeRequests().antMatchers("/userlogin").permitAll()
+            .csrf().disable()
+            .authorizeRequests().antMatchers("/userlogin").permitAll()
             .and().authorizeRequests().antMatchers("/register").permitAll()
             .and().authorizeRequests().antMatchers("/home").permitAll()
-			.anyRequest().authenticated()
+            .and().authorizeRequests().antMatchers("/registrationdone").permitAll()
+            .and().authorizeRequests().antMatchers("/authenticate").permitAll()
+            .anyRequest().authenticated()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
             http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }

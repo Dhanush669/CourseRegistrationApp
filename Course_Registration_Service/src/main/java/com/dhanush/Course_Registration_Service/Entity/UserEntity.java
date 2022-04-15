@@ -1,6 +1,7 @@
 package com.dhanush.Course_Registration_Service.Entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
@@ -9,8 +10,10 @@ public class UserEntity {
     private String fname,lname,mailid,password;
     @Transient
     private String confirmpassword;
-    @Id
     long phno;
+    @Id
+    @GeneratedValue
+    private int id;
 
     
 
