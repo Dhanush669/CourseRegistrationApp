@@ -5,11 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+
 @Entity(name="UserDetails")
 public class UserEntity {
-    private String fname,lname,mailid,password;
+    private String fname,lname;
+    String password;
+    String mailid;
     @Transient
     private String confirmpassword;
+    
     long phno;
     @Id
     @GeneratedValue

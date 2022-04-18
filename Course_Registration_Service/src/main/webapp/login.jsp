@@ -11,10 +11,19 @@
             *{
               margin: 0;
               padding: 0;
+              font-family:sans-serif;
           }
+          body{
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
         .login-container {
             margin: 0 auto;
-            width: 30%;
+            width: 70%;
             background-color: rgba(211, 211, 211, 0.301);
             padding: 20px;
             font-size: 18px;
@@ -23,6 +32,8 @@
             align-items: center;
             justify-content: flex-start;
             height: 500px;
+            border-radius: 1rem;
+            margin-top: 20px;
           }
           
           .logo-div{
@@ -31,8 +42,10 @@
               background-color: black;
               margin-bottom: 20px;
           }
-          h2{
+          h5{
               margin-bottom: 10px;
+              font-size: 1.3em;
+              
           }
           p{
               margin-top: 40px;
@@ -45,17 +58,48 @@
           }
           
           input{
-                height: 2.5rem;
+                height: 2rem;
                 width: 100%;
                 padding: 5px;
                 font-size: 16px;
+                margin-bottom: 1.5rem;
           }
           
-          lable{
-              font-size: 20px;
+          #lable{
+              font-size: 14px;
+              font-weight: bold;
           }
+          
+          #submit{
+              width: 100%; 
+              height: 50px; 
+              padding:0;
+              color: white;
+              font-weight: bold;
+              background-color: green;
+              border: none;
+              margin: 0 auto;
+              margin-left: 7px;
+          }
+          
+        #exception{
+            margin-top: 10px;
+            color:red;
+            font-size: 14px;
+        }
           
         </style>
+            
+        <script>
+//            function validate(){
+//                let email=document.forms["myForm"]["userName"].value;
+//                let password=document.forms["myForm"]["password"].value;
+//                if(email)
+          //  }
+        function removeException(){
+            document.getElementById("exception").innerHTML="";
+        }
+        </script>    
     </head>
 
     <body>
@@ -63,15 +107,24 @@
             <div class="logo-div">
                 
             </div>
-            <h2>Sign In with your account</h2>
-                <form action="/userlogin" method="post">
-                    <label for="userName">Email Id:</label><br>
-                    <input type="email" id="userName" name="userName" value=""><br><br>
-                    <label for="password">Password:</label><br>
-                    <input type="password" id="password" name="password" value=""><br><br>
-                    <input type="submit" value="LogIn" style="width: 100%; height: 50px; padding:0">
-                  </form>
+            <h5>Sign In with your account</h5>
+                <form name="myForm" action="/userlogin" method="post">
+                    <label id="lable" for="userName">Email</label>
+                    <input type="email" id="userName" name="userName" value=""
+                           required placeholder="email" 
+                            oninvalid="this.setCustomValidity('Enter a valid email')"
+                             oninput="this.setCustomValidity('');removeException()"
+                           >
+                    <label id="lable" for="password">Password</label>
+                    <input type="password" id="password" name="password" value=""
+                           required placeholder="password" 
+                                oninvalid="this.setCustomValidity('password should not be empty!')"
+                                 oninput="this.setCustomValidity('');removeException()"
+                           >
+                    <input id="submit" type="submit" value="LogIn" style="">
+                </form>
             <p>don't have an account? <a href="/register">register</a></p>
+            <p id="exception">${exception}</p>
         </div>
     </body>
 

@@ -38,29 +38,26 @@
         }
 
     </style>
-    <link rel="stylesheet" type="text/css" href='/css/register.css'/>
+    <link rel="stylesheet" type="text/css" href='${path}/css/register.css'/>
 </head>
 <html>
     <body>
         <div class="topnav">
-<!--            <b>course title</b>
-            <button onclick="location.href='/authenticate'">LogIn</button>
-            <button onclick="location.href='/register'">Register</button>
-            <button onclick="location.href='/showdetails'">Show Details</button>-->
             <div>
-                <img src="C:\Users\Dhanush\Desktop\CourseRegistrationApp\Course_Registration_Service\src\main\resources\static\asserts\logo.png" />
+                <img src="${path}/src/main/resources/static/asserts/logo.png" />
                 <b>Course</b>
             </div>
             <div>
+                <a href="/courses">
+                    Courses
+                </a>
                 <a href="/authenticate">
                     LogIn
                 </a>
                 <a href="/register">
                     Register
                 </a>
-                <a href="/authenticate">
-                    Show Details
-                </a>
+                
             </div>
         </div>
     </body>

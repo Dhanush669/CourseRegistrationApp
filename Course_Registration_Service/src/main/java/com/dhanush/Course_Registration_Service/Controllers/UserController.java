@@ -8,6 +8,10 @@ import com.dhanush.Course_Registration_Service.Model.LoginData;
 import com.dhanush.Course_Registration_Service.Repository.UserRepo;
 import com.dhanush.Course_Registration_Service.Service.MyUserDetailsService;
 import com.dhanush.Course_Registration_Service.utils.JwtUtils;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.annotations.GenerationTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class UserController {
@@ -77,33 +82,36 @@ public class UserController {
     }
 
     @PostMapping("/registrationdone")
-    public String successfullRegistration(UserEntity entity){
-
-        if(entity.getFname()==null && entity.getLname()==null && entity.getMailid()==null && entity.getPassword()==null && entity.getConfirmpassword()==null){
-            return "register.jsp";
-        }
-        if(!entity.getPassword().equals(entity.getConfirmpassword())){
-            
-            return "register.jsp";
-        }
+    public ModelAndView successfullRegistration(UserEntity entity){
+        ModelAndView modelAndView=new ModelAndView();
         
+       
         if(userRepo.findUserBymailid(entity.getMailid())!=null){
-           
-            return "register.jsp";
+            
+            modelAndView.addObject("exception", "This email id is already registered");
+            modelAndView.setViewName("register.jsp");
+            return modelAndView;
         }
         
         BCryptPasswordEncoder bCrypt=new BCryptPasswordEncoder();
         entity.setPassword(bCrypt.encode(entity.getPassword()));
         
         userRepo.save(entity);
-        System.out.println("hey inside reg done"+": ");
-        return "successfullRegistration.jsp";
+        
+        modelAndView.addObject("exception","");
+        modelAndView.setViewName("successfullRegistration.jsp");
+        return modelAndView;
         
     }
 
     @RequestMapping(value="/home",method=RequestMethod.GET)
     public String goToHome(){
         return "home.jsp";
+    }
+    
+    @GetMapping("/courses")
+    public String displayCourses(){
+        return "courses.jsp";
     }
 
 //    @RequestMapping("/showdetails")
